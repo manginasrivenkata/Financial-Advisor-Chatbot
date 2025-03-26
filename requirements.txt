@@ -5,4 +5,5 @@ python-dotenv
 langchain
 langchain-community
 PyPDF2
-google-cloud-core
+google-cloud-core 
+gunicorn
