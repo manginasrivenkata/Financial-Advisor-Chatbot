@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Advice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/advisory.js') }}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #ff6b11;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #ff6b11;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff9e45;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .response-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .markdown-content {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+
+        .markdown-content h1, 
+        .markdown-content h2, 
+        .markdown-content h3 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+        }
+
+        .markdown-content ul, 
+        .markdown-content ol {
+            padding-left: 2em;
+        }
+
+        .markdown-content code {
+            background: #f5f7fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #3498db;
+            margin: 1em 0;
+            padding-left: 1em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Advisory Bot</h1>
+        <form id="loanForm" onsubmit="return submitForm('loan')">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required min="18" max="120">
+            </div>
+
+            <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" id="occupation" name="occupation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="monthly_income">Monthly Income (₹)</label>
+                <input type="number" id="monthly_income" name="monthly_income" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="monthly_expenses">Monthly Expenses (₹)</label>
+                <input type="number" id="monthly_expenses" name="monthly_expenses" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="loan_type">Type of Loan</label>
+                <select id="loan_type" name="loan_type" required>
+                    <option value="">Select Loan Type</option>
+                    <option value="Home">Home Loan</option>
+                    <option value="Personal">Personal Loan</option>
+                    <option value="Business">Business Loan</option>
+                    <option value="Education">Education Loan</option>
+                    <option value="Vehicle">Vehicle Loan</option>
+                    <option value="Gold">Gold Loan</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="loan_amount">Loan Amount Needed (₹)</label>
+                <input type="number" id="loan_amount" name="loan_amount" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="loan_purpose">Loan Purpose</label>
+                <textarea id="loan_purpose" name="loan_purpose" required 
+                    placeholder="Describe the purpose of the loan..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="loan_term">Desired Loan Term (months)</label>
+                <input type="number" id="loan_term" name="loan_term" required min="1" max="360">
+            </div>
+
+            <div class="form-group">
+                <label for="credit_score">Credit Score</label>
+                <input type="number" id="credit_score" name="credit_score" 
+                    required min="300" max="900" value="750">
+            </div>
+
+            <div class="form-group">
+                <label for="existing_loans">Existing Loans</label>
+                <textarea id="existing_loans" name="existing_loans" required
+                    placeholder="List any existing loans with EMI amounts..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="collateral">Collateral Available</label>
+                <textarea id="collateral" name="collateral" required
+                    placeholder="Describe any assets available as collateral..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="employment_status">Employment Status</label>
+                <select id="employment_status" name="employment_status" required>
+                    <option value="">Select Employment Status</option>
+                    <option value="Salaried">Salaried</option>
+                    <option value="Self-Employed">Self-Employed</option>
+                    <option value="Business Owner">Business Owner</option>
+                    <option value="Retired">Retired</option>
+                    <option value="Student">Student</option>
+                    <option value="Unemployed">Unemployed</option>
+                </select>
+            </div>
+
+            <button type="submit">Get Loan Advice</button>
+        </form>
+
+        <div class="response-container" id="adviceResponse" style="display: none;">
+            <div class="markdown-content"></div>
+        </div>
+    </div>
+
+    <div id="loanResult"></div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator Board</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6b11, #ff9e45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .button {
+            background-color: white;
+            color: #ff6b11;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: left;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 150px;
+            width: 300px;
+        }
+        .button:hover {
+            background-color: #ff9e45;
+            color: white;
+        }
+        .button img {
+            width: 50px;
+            height: 50px;
+        }
+        .button-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .button-title {
+            font-size: 25px;
+            color: #0280ff;
+        }
+        .button-subtitle {
+            font-size: 15px;
+            color: #ff7300;
+            align-self: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="loan_emi.html" class="button">
+            <img src="Screenshot 2024-07-25 131549.png" alt="Loan EMI Icon">
+            <div class="button-text">
+                <span class="button-title">Loan EMI Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="fd.html" class="button">
+            <img src="ggg.png" alt="FD Icon">
+            <div class="button-text">
+                <span class="button-title">FD Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="ppf.html" class="button">
+            <img src="yt.png" alt="PPF Icon">
+            <div class="button-text">
+                <span class="button-title">PPF Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="recurring.html" class="button">
+            <img src="hhh.png" alt="Recurring Loan Icon">
+            <div class="button-text">
+                <span class="button-title">Recurring Loan Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="sip_calc.html" class="button">
+            <img src="tt.png" alt="SIP Icon">
+            <div class="button-text">
+                <span class="button-title">SIP Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="egi_gold.html" class="button">
+            <img src="images.png" alt="Gold Loan Eligibility Icon">
+            <div class="button-text">
+                <span class="button-title">Gold Loan Eligibility</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="egi_loan.html" class="button">
+            <img src="sdsdg.png" alt="Loan Eligibility Icon">
+            <div class="button-text">
+                <span class="button-title">Loan Eligibility Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+        <a href="ipo.html" class="button">
+            <img src="ipokk.png" alt="Loan Eligibility Icon">
+            <div class="button-text">
+                <span class="button-title">IPO Loan Calculator</span>
+                <span class="button-subtitle">Calculate Now →</span>
+            </div>
+        </a>
+    </div>
+</body>
+</html>

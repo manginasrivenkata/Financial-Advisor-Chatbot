@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPF Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff6b11, #ff9e45);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #ff6b11;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .slider-label {
+            font-weight: bold;
+        }
+
+        .slider-value {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #ff6b11;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Black border */
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Black border */
+            cursor: pointer;
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b11;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .buttons button {
+            background-color: #ff6b11;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #ff9e45;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>PPF Calculator</h1>
+        <form id="ppfForm">
+            <label for="principal">Investment Value:</label>
+            <div class="slider-container">
+                <input type="range" id="principal" name="principal" min="500" max="150000" step="100" value="5000" oninput="updatePrincipalValue(this.value)">
+                <div class="slider-value" id="principalValue">₹5000</div>
+            </div>
+            <label for="rate">Annual Interest Rate (%):</label>
+            <input type="number" id="rate" name="rate" value="7.10" required><br>
+            
+            <div class="slider-container">
+                <label for="frequency" class="slider-label">Investment Frequency:</label>
+                <select id="frequency" name="frequency">
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="half_yearly">Half-Yearly</option>
+                    <option value="annually">Annually</option>
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button type="button" onclick="calculatePPF()">Calculate</button>
+            </div>
+        </form>
+    <p>Maturity Details on completion of 15 Years, if the investment is chosen today as per frequency and prevailing ROI.</p>
+        <div class="result">
+            <div class="result-item" id="maturityValue">Maturity Value: ₹0.00</div>
+            <div class="result-item" id="totalDeposit">Total Deposit: ₹0.00</div>
+            <div class="result-item" id="totalInterest">Total Interest: ₹0.00</div>
+        </div>
+    </div>
+    
+    <script>
+        function updatePrincipalValue(value) {
+            document.getElementById('principalValue').textContent = `₹${value}`;
+        }
+
+        function calculatePPF() {
+            // Get form values
+            const principal = parseFloat(document.getElementById('principal').value);
+            const annualRate = parseFloat(document.getElementById('rate').value);
+            const years = 15; // Fixed maturity period of 15 years
+            const frequency = document.getElementById('frequency').value;
+
+            // Convert annual rate to decimal
+            const i = annualRate / 100;
+            
+            // Calculate the number of compounding periods and rate per period
+            let n;
+            let rate;
+            switch (frequency) {
+                case 'monthly':
+                    n = years * 12;
+                    rate = i / 12;
+                    break;
+                case 'quarterly':
+                    n = years * 4;
+                    rate = i / 4;
+                    break;
+                case 'half_yearly':
+                    n = years * 2;
+                    rate = i / 2;
+                    break;
+                case 'annually':
+                    n = years;
+                    rate = i;
+                    break;
+                default:
+                    return;
+            }
+
+            // Calculate the final amount
+            const maturityValue = principal * (((1 + rate) ** n - 1) / rate);
+            const totalDeposit = principal * n;
+            const totalInterest = maturityValue - totalDeposit;
+
+            // Display the result
+            document.getElementById('maturityValue').textContent = `Maturity Value: ₹${maturityValue.toFixed(2)}`;
+            document.getElementById('totalDeposit').textContent = `Total Deposit: ₹${totalDeposit.toFixed(2)}`;
+            document.getElementById('totalInterest').textContent = `Total Interest: ₹${totalInterest.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
+>

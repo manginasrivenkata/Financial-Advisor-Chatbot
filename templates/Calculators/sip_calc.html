@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff6b11, #ff9e45);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #ff6b11;
+        }
+
+        .input-container {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-label {
+            font-weight: bold;
+        }
+
+        .input-value {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        input[type="range"],
+        input[type="number"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b11;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .buttons button {
+            background-color: #ff6b11;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #ff9e45;
+        }
+        input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background: #ff6b11;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    border: 2px solid #000; /* Add this line for the black border */
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    border: 2px solid #000; /* Add this line for the black border */
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>SIP Calculator</h1>
+
+        <div class="input-container">
+            <div class="input-label">Monthly Investment (₹):</div>
+            <input type="number" id="monthlyInvestment" min="0" step="100" value="5000">
+        </div>
+
+        <div class="input-container">
+            <div class="input-label">Lumpsum Total Investment (₹):</div>
+            <input type="number" id="lumpsumInvestment" min="0" step="10000" value="0">
+        </div>
+
+        <div class="input-container">
+            <div class="input-label">Number of Years:</div>
+            <input type="range" id="years" min="1" max="50" value="10" oninput="updateValues()">
+            <div class="input-value" id="yearsValue">10 years</div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-label">Expected Rate of Return (% per annum):</div>
+            <input type="range" id="rateOfReturn" min="1" max="50" value="12" oninput="updateValues()">
+            <div class="input-value" id="rateOfReturnValue">12%</div>
+        </div>
+
+        <div class="result">
+            <div class="result-item">
+                Total Wealth: ₹<span id="totalWealth">0</span>
+            </div>
+            <div class="result-item">
+                Invested Amount: ₹<span id="investedAmount">0</span>
+            </div>
+            <div class="result-item">
+                Wealth Gained: ₹<span id="wealthGained">0</span>
+            </div>
+        </div>
+
+        <div class="note">
+            Please note that the rate of interest on an SIP may differ based on market conditions, thus affecting the estimated returns.
+        </div>
+
+        <div class="buttons">
+            <button onclick="resetValues()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        function calculateSIP(monthlyInvestment, lumpsumInvestment, years, rateOfReturn) {
+            const months = years * 12;
+            const monthlyRate = rateOfReturn / 12 / 100;
+            let totalWealth = lumpsumInvestment * Math.pow(1 + monthlyRate, months);
+
+            for (let i = 1; i <= months; i++) {
+                totalWealth += monthlyInvestment * Math.pow(1 + monthlyRate, months - i);
+            }
+
+            return totalWealth.toFixed(2);
+        }
+
+        function updateValues() {
+            const monthlyInvestment = parseFloat(document.getElementById('monthlyInvestment').value) || 0;
+            const lumpsumInvestment = parseFloat(document.getElementById('lumpsumInvestment').value) || 0;
+            const years = parseInt(document.getElementById('years').value);
+            const rateOfReturn = parseFloat(document.getElementById('rateOfReturn').value);
+
+            document.getElementById('yearsValue').innerText = `${years} years`;
+            document.getElementById('rateOfReturnValue').innerText = `${rateOfReturn}%`;
+
+            const totalWealth = calculateSIP(monthlyInvestment, lumpsumInvestment, years, rateOfReturn);
+            const investedAmount = (monthlyInvestment * 12 * years + lumpsumInvestment).toFixed(2);
+            const wealthGained = (totalWealth - investedAmount).toFixed(2);
+
+            document.getElementById('totalWealth').innerText = parseFloat(totalWealth).toLocaleString();
+            document.getElementById('investedAmount').innerText = parseFloat(investedAmount).toLocaleString();
+            document.getElementById('wealthGained').innerText = parseFloat(wealthGained).toLocaleString();
+        }
+
+        function resetValues() {
+            document.getElementById('monthlyInvestment').value = 5000;
+            document.getElementById('lumpsumInvestment').value = 0;
+            document.getElementById('years').value = 10;
+            document.getElementById('rateOfReturn').value = 12;
+            updateValues();
+        }
+
+        updateValues();
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center mb-5">
+        <h1 class="display-4">Welcome to Financial Advisory</h1>
+        <p class="lead">Your AI-powered financial planning assistant</p>
+        <hr class="my-4">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card h-100 service-card">
+            <div class="card-body text-center">
+                <i class="fas fa-robot fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">AI Chatbot</h5>
+                <p class="card-text">Get instant answers to your financial questions from our AI assistant.</p>
+                <a href="/chatbot" class="btn btn-primary">Chat Now</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100 service-card">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Investment Advice</h5>
+                <p class="card-text">Get personalized investment recommendations based on your goals.</p>
+                <a href="/investment" class="btn btn-primary">Get Advice</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100 service-card">
+            <div class="card-body text-center">
+                <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Insurance Planning</h5>
+                <p class="card-text">Find the right insurance coverage for your needs.</p>
+                <a href="/insurance" class="btn btn-primary">Plan Now</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100 service-card">
+            <div class="card-body text-center">
+                <i class="fas fa-hand-holding-usd fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Loan Advisory</h5>
+                <p class="card-text">Get expert advice on loans and EMI planning.</p>
+                <a href="/loan" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Financial Calculators</h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- EMI Calculators -->
+                    <div class="col-md-3">
+                        <div class="calculator-group">
+                            <h6><i class="fas fa-calculator"></i> EMI Calculators</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/calculators/loan-emi" class="btn btn-outline-primary btn-sm">Loan EMI</a>
+                                <a href="/calculators/loan-eligibility" class="btn btn-outline-primary btn-sm">Loan Eligibility</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investment Calculators -->
+                    <div class="col-md-3">
+                        <div class="calculator-group">
+                            <h6><i class="fas fa-piggy-bank"></i> Investment Calculators</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/calculators/fd" class="btn btn-outline-primary btn-sm">Fixed Deposit</a>
+                                <a href="/calculators/recurring" class="btn btn-outline-primary btn-sm">Recurring Deposit</a>
+                                <a href="/calculators/ppf" class="btn btn-outline-primary btn-sm">PPF Calculator</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Calculators -->
+                    <div class="col-md-3">
+                        <div class="calculator-group">
+                            <h6><i class="fas fa-chart-line"></i> Market Calculators</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/calculators/sip" class="btn btn-outline-primary btn-sm">SIP Calculator</a>
+                                <a href="/calculators/ipo" class="btn btn-outline-primary btn-sm">IPO Calculator</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Calculators -->
+                    <div class="col-md-3">
+                        <div class="calculator-group">
+                            <h6><i class="fas fa-tools"></i> Other Tools</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/calculators/gold-loan" class="btn btn-outline-primary btn-sm">Gold Loan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .service-card {
+        transition: transform 0.2s;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .calculator-group {
+        padding: 20px;
+        border-radius: 8px;
+        background: #f8f9fa;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .calculator-group:hover {
+        background: #f1f3f5;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .calculator-group h6 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .btn-outline-primary {
+        color: #2c3e50;
+        border-color: #2c3e50;
+        text-align: left;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #2c3e50;
+        border-color: #2c3e50;
+        color: white;
+    }
+    
+    .btn-primary {
+        background-color: #2c3e50;
+        border-color: #2c3e50;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #34495e;
+        border-color: #34495e;
+    }
+    
+    .card-header {
+        background-color: #2c3e50 !important;
+        color: white;
+        border-bottom: none;
+    }
+    
+    .text-primary {
+        color: #2c3e50 !important;
+    }
+    
+    .fas {
+        margin-right: 8px;
+    }
+
+    .display-4 {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .lead {
+        color: #666;
+    }
+</style>
+{% endblock %} 

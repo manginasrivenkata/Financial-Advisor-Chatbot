@@ -1,0 +1,17 @@
+.advice {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border: 1px solid #b8daff;
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+.error {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff3f3;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+} 

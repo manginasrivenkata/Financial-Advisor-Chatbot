@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Loan Eligibility Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #ffa500;
+        }
+
+        .input-container {
+            width: 100%;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-label {
+            font-weight: bold;
+        }
+
+        .input-value {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffa500;
+            width: 100%;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            text-align: center;
+            flex: 1;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .buttons button {
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Gold Loan Eligibility Calculator</h1>
+        <form id="loanForm">
+            <div class="input-container">
+                <label for="ltv" class="input-label">Select LTV (Loan-to-Value) Ratio: </label>
+                <select id="ltv" name="ltv">
+                    <option value="75">75%</</option>
+                    <option value="80">80%</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="ornaments" class="input-label">Number of Ornaments: </label>
+                <input type="number" id="ornaments" name="ornaments" min="1" value="1" onchange="updateOrnaments()">
+            </div>
+            <div id="ornaments-container"></div>
+            <div class="input-container">
+                <label for="goldRate" class="input-label">Gold Rate per 10g (₹): </label>
+                <input type="number" id="goldRate" name="goldRate" value="71065" readonly>
+                <div class="input-value">10g of 24k gold (99.9%) in Mumbai is ₹71,065.00 as of 24 Jul, 2024</div>
+            </div>
+            <div class="buttons">
+                <button type="button" onclick="calculateEligibility()">Calculate</button>
+            </div>
+        </form>
+        <div class="result">
+            <div class="result-item" id="eligibilityAmount">Eligible Loan Amount: ₹0.00</div>
+        </div>
+    </div>
+    
+    <script>
+        function updateOrnaments() {
+            const ornamentsContainer = document.getElementById('ornaments-container');
+            const numberOfOrnaments = parseInt(document.getElementById('ornaments').value);
+
+            ornamentsContainer.innerHTML = '';
+
+            for (let i = 0; i < numberOfOrnaments; i++) {
+                const inputContainer = document.createElement('div');
+                inputContainer.classList.add('input-container');
+                
+                const label = document.createElement('label');
+                label.classList.add('input-label');
+                label.textContent = `Weight of Ornament ${i + 1} (in grams): `;
+                label.setAttribute('for', `ornamentWeight${i}`);
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `ornamentWeight${i}`;
+                input.name = `ornamentWeight${i}`;
+                input.min = '0';
+                input.value = '0';
+
+                inputContainer.appendChild(label);
+                inputContainer.appendChild(input);
+                ornamentsContainer.appendChild(inputContainer);
+            }
+        }
+
+        function calculateEligibility() {
+            const ltv = parseInt(document.getElementById('ltv').value);
+            const numberOfOrnaments = parseInt(document.getElementById('ornaments').value);
+            const goldRate = parseFloat(document.getElementById('goldRate').value);
+            let totalGoldWeight = 0;
+
+            for (let i = 0; i < numberOfOrnaments; i++) {
+                const weight = parseFloat(document.getElementById(`ornamentWeight${i}`).value);
+                totalGoldWeight += weight;
+            }
+
+            const goldValue = (totalGoldWeight / 10) * goldRate; // Gold rate is per 10 grams
+            const eligibleLoanAmount = (goldValue * ltv) / 100;
+
+            document.getElementById('eligibilityAmount').textContent = `Eligible Loan Amount: ₹${eligibleLoanAmount.toFixed(2).toLocaleString()}`;
+        }
+
+        window.onload = updateOrnaments; // Initialize ornaments on page load
+    </script>
+</body>
+</html>
+
+

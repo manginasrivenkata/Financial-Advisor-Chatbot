@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurring Deposit Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #fda085;
+        }
+
+        .input-container {
+            width: 100%;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-label {
+            font-weight: bold;
+        }
+
+        .input-value {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        select, input[type="range"], input[type="radio"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fda085;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            text-align: center;
+            flex: 1;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .buttons button {
+            background-color: #fda085;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #f6d365;
+        }
+
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .slider-container label {
+            width: 200px;
+        }
+
+        .slider-container input {
+            width: calc(100% - 220px);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #ff6b11;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Add this line for the black border */
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Add this line for the black border */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Recurring Deposit (RD) Calculator</h1>
+        <form id="rdForm">
+            <div class="input-container">
+                <label class="input-label">Type of Customer:</label>
+                <div>
+                    <input type="radio" id="normal" name="customerType" value="normal" checked>
+                    <label for="normal">Normal</label>
+                    <input type="radio" id="senior" name="customerType" value="senior">
+                    <label for="senior">Senior Citizen</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <label class="input-label">Regular Monthly Deposit (₹):</label>
+                <div class="slider-container">
+                    <label for="monthlyDeposit">Amount:</label>
+                    <input type="range" id="monthlyDeposit" name="monthlyDeposit" min="500" max="1000000" step="500" value="500" oninput="updateDepositDisplay()">
+                    <span id="depositDisplay">₹500</span>
+                </div>
+            </div>
+            <div class="input-container">
+                <label class="input-label">Saving Term:</label>
+                <div class="slider-container">
+                    <label for="years">Years:</label>
+                    <input type="range" id="years" name="years" min="1" max="10" value="1" oninput="updateTermDisplay()">
+                    <span id="yearsDisplay">1</span>
+                </div>
+                <div class="slider-container">
+                    <label for="months">Months:</label>
+                    <select id="months" name="months" onchange="updateTermDisplay()">
+                        <option value="0">0</option>
+                        <option value="3">3</option>
+                        <option value="6">6</option>
+                        <option value="9">9</option>
+                    </select>
+                    <span id="monthsDisplay">0</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="button" onclick="calculateRD()">Calculate</button>
+            </div>
+        </form>
+        <div class="result">
+            <div class="result-item" id="maturityValue">Maturity Value: ₹0.00</div>
+            <div class="result-item" id="maturityDate">Maturity Date: </div>
+            <div class="result-item" id="aggregateInterest">Aggregate Interest Amount: ₹0.00</div>
+            <div class="result-item" id="rateOfInterest">Rate of Interest: 0%</div>
+        </div>
+    </div>
+
+    <script>
+        function updateDepositDisplay() {
+            document.getElementById('depositDisplay').textContent = `₹${parseInt(document.getElementById('monthlyDeposit').value).toLocaleString()}`;
+        }
+
+        function updateTermDisplay() {
+            document.getElementById('yearsDisplay').textContent = document.getElementById('years').value;
+            document.getElementById('monthsDisplay').textContent = document.getElementById('months').value;
+            updateMaturityDate();
+        }
+
+        function updateMaturityDate() {
+            const currentDate = new Date();
+            const years = parseInt(document.getElementById('years').value);
+            const months = parseInt(document.getElementById('months').value);
+
+            const maturityDate = new Date();
+            maturityDate.setFullYear(currentDate.getFullYear() + years);
+            maturityDate.setMonth(currentDate.getMonth() + months);
+
+            document.getElementById('maturityDate').textContent = `Maturity Date: ${maturityDate.toDateString()}`;
+        }
+
+        function calculateRD() {
+            const customerType = document.querySelector('input[name="customerType"]:checked').value;
+            const monthlyDeposit = parseFloat(document.getElementById('monthlyDeposit').value);
+            const years = parseInt(document.getElementById('years').value);
+            const months = parseInt(document.getElementById('months').value);
+
+            const totalMonths = (years * 12) + months;
+            const interestRate = customerType === 'normal' ? 5.75 : 6.25;
+
+            // Calculating maturity value using the formula for RD
+            const maturityValue = monthlyDeposit * (Math.pow(1 + (interestRate / 100) / 4, 4 * (totalMonths / 12)) - 1) / (1 - Math.pow(1 + (interestRate / 100) / 4, -1 / 3));
+
+            const aggregateInterest = maturityValue - (monthlyDeposit * totalMonths);
+
+            document.getElementById('maturityValue').textContent = `Maturity Value: ₹${maturityValue.toFixed(2).toLocaleString()}`;
+            document.getElementById('aggregateInterest').textContent = `Aggregate Interest Amount: ₹${aggregateInterest.toFixed(2).toLocaleString()}`;
+            document.getElementById('rateOfInterest').textContent = `Rate of Interest: ${interestRate}%`;
+        }
+
+        // Initial display update
+        updateDepositDisplay();
+        updateTermDisplay();
+        updateMaturityDate();
+    </script>
+</body>
+</html>

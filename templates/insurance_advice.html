@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Advice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/advisory.js') }}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #ff6b11;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #ff6b11;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff9e45;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .response-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .markdown-content {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+
+        .markdown-content h1, 
+        .markdown-content h2, 
+        .markdown-content h3 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+        }
+
+        .markdown-content ul, 
+        .markdown-content ol {
+            padding-left: 2em;
+        }
+
+        .markdown-content code {
+            background: #f5f7fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #3498db;
+            margin: 1em 0;
+            padding-left: 1em;
+            color: #666;
+        }
+    </style>
+    <script>
+        function submitForm(formType) {
+            const form = document.getElementById(`${formType}Form`);
+            const formData = new FormData(form);
+            
+            // Show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = 'Processing...';
+            submitButton.disabled = true;
+
+            // Show the result container
+            const resultContainer = document.getElementById('insuranceResult');
+            resultContainer.style.display = 'block';
+            resultContainer.innerHTML = '<div class="loading">Generating advice...</div>';
+
+            fetch(`/get_${formType}_advice`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+
+                // Display the advice or error
+                if (data.error) {
+                    resultContainer.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    // Convert markdown to HTML and display
+                    const htmlContent = marked.parse(data.advice);
+                    resultContainer.innerHTML = `
+                        <div class="advice">
+                            <div class="markdown-content">${htmlContent}</div>
+                        </div>`;
+                }
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+            })
+            .catch(error => {
+                // Reset button state
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+
+                // Display error
+                resultContainer.innerHTML = '<div class="error">Failed to get advice. Please try again.</div>';
+                console.error('Error:', error);
+            });
+
+            return false; // Prevent form submission
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Insurance Advisory Bot</h1>
+        <form id="insuranceForm" onsubmit="return submitForm('insurance')">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required min="0" max="120">
+            </div>
+
+            <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" id="occupation" name="occupation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="monthly_income">Monthly Income (₹)</label>
+                <input type="number" id="monthly_income" name="monthly_income" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="family_members">Number of Family Members</label>
+                <input type="number" id="family_members" name="family_members" required min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="existing_insurance">Existing Insurance Policies</label>
+                <textarea id="existing_insurance" name="existing_insurance" 
+                    placeholder="List your current insurance policies..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="insurance_type">Type of Insurance Needed</label>
+                <select id="insurance_type" name="insurance_type" required>
+                    <option value="">Select Insurance Type</option>
+                    <option value="Life">Life Insurance</option>
+                    <option value="Health">Health Insurance</option>
+                    <option value="Term">Term Insurance</option>
+                    <option value="Vehicle">Vehicle Insurance</option>
+                    <option value="Property">Property Insurance</option>
+                    <option value="Multiple">Multiple Types</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="coverage_amount">Desired Coverage Amount (₹)</label>
+                <input type="number" id="coverage_amount" name="coverage_amount" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="medical_history">Medical History</label>
+                <textarea id="medical_history" name="medical_history" 
+                    placeholder="Describe any pre-existing conditions..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="lifestyle_habits">Lifestyle Habits</label>
+                <textarea id="lifestyle_habits" name="lifestyle_habits" 
+                    placeholder="Describe your lifestyle (smoking, exercise, etc.)..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="risk_factors">Risk Factors</label>
+                <textarea id="risk_factors" name="risk_factors" 
+                    placeholder="Any specific risks in your life or work..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="premium_budget">Monthly Premium Budget (₹)</label>
+                <input type="number" id="premium_budget" name="premium_budget" required min="0">
+            </div>
+
+            <button type="submit">Get Insurance Advice</button>
+        </form>
+
+        <div id="insuranceResult" style="display: none;" class="response-container">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </div>
+</body>
+</html> 

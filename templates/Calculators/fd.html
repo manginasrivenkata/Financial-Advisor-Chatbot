@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Deposit Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #000000;
+        }
+
+        .input-container {
+            width: 100%;    
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-label {
+            font-weight: bold;
+        }
+
+        .input-value {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        select, input[type="number"], input[type="date"], input[type="radio"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000000;
+            width: 100%;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            text-align: center;
+            flex: 1;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .buttons button {
+            background-color: #ffd700;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #ffd700;
+        }
+
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .slider-container label {
+            width: 100px;
+        }
+
+        .slider-container input {
+            width: calc(100% - 120px);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Add this line for the black border */
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #000; /* Add this line for the black border */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Fixed Deposit (FD) Calculator</h1>
+        <form id="fdForm">
+            <div class="input-container">
+                <label class="input-label">Type of Customer:</label>
+                <div>
+                    <input type="radio" id="normal" name="customerType" value="normal" checked>
+                    <label for="normal">Normal</label>
+                    <input type="radio" id="senior" name="customerType" value="senior">
+                    <label for="senior">Senior Citizen</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <label class="input-label">Type of Fixed Deposit:</label>
+                <select id="fdType" name="fdType">
+                    <option value="cumulative">Reinvestment (Cumulative)</option>
+                    <option value="quarterly">Quarterly Payout</option>
+                    <option value="monthly">Monthly Payout</option>
+                    <option value="shortTerm">Short Term Deposit</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label class="input-label">Date of Fixed Deposit:</label>
+                <input type="date" id="fdDate" name="fdDate" value="2024-07-25" onchange="updateMaturityDate()">
+            </div>
+            <div class="input-container">
+                <label class="input-label">Amount of Fixed Deposit (₹):</label>
+                <input type="number" id="fdAmount" name="fdAmount" min="0" value="5000">
+            </div>
+            <div class="input-container">
+                <label class="input-label">Tenure:</label>
+                <div class="slider-container">
+                    <label for="years">Years:</label>
+                    <input type="range" id="years" name="years" min="0" max="10" value="0" oninput="updateTenureDisplay(); updateMaturityDate()">
+                    <span id="yearsDisplay">0</span>
+                </div>
+                <div class="slider-container">
+                    <label for="months">Months:</label>
+                    <input type="range" id="months" name="months" min="0" max="11" value="0" oninput="updateTenureDisplay(); updateMaturityDate()">
+                    <span id="monthsDisplay">0</span>
+                </div>
+                <div class="slider-container">
+                    <label for="days">Days:</label>
+                    <input type="range" id="days" name="days" min="0" max="29" value="0" oninput="updateTenureDisplay(); updateMaturityDate()">
+                    <span id="daysDisplay">0</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="button" onclick="calculateFD()">Calculate</button>
+            </div>
+        </form>
+        <div class="result">
+            <div class="result-item" id="maturityAmount">Maturity Amount: ₹0.00</div>
+            <div class="result-item" id="maturityDate">Maturity Date: </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTenureDisplay() {
+            document.getElementById('yearsDisplay').textContent = document.getElementById('years').value;
+            document.getElementById('monthsDisplay').textContent = document.getElementById('months').value;
+            document.getElementById('daysDisplay').textContent = document.getElementById('days').value;
+        }
+
+        function updateMaturityDate() {
+            const fdDate = new Date(document.getElementById('fdDate').value);
+            const years = parseInt(document.getElementById('years').value);
+            const months = parseInt(document.getElementById('months').value);
+            const days = parseInt(document.getElementById('days').value);
+
+            fdDate.setFullYear(fdDate.getFullYear() + years);
+            fdDate.setMonth(fdDate.getMonth() + months);
+            fdDate.setDate(fdDate.getDate() + days);
+
+            document.getElementById('maturityDate').textContent = `Maturity Date: ${fdDate.toDateString()}`;
+        }
+
+        function calculateFD() {
+            const customerType = document.querySelector('input[name="customerType"]:checked').value;
+            const fdAmount = parseFloat(document.getElementById('fdAmount').value);
+            const years = parseInt(document.getElementById('years').value);
+            const months = parseInt(document.getElementById('months').value);
+            const days = parseInt(document.getElementById('days').value);
+
+            const totalDays = (years * 365) + (months * 30) + days;
+            const interestRate = customerType === 'normal' ? 4.25 : 4.75;
+            const maturityAmount = fdAmount * Math.pow((1 + (interestRate / 100) / 365), totalDays);
+
+            document.getElementById('maturityAmount').textContent = `Maturity Amount: ₹${maturityAmount.toFixed(2).toLocaleString()}`;
+        }
+
+        // Initial display update
+        updateTenureDisplay();
+        updateMaturityDate();
+    </script>
+</body>
+</html>

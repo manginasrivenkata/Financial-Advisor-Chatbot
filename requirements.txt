@@ -1,0 +1,8 @@
+flask
+google-cloud-aiplatform
+vertexai
+python-dotenv
+langchain
+langchain-community
+PyPDF2
+google-cloud-core
