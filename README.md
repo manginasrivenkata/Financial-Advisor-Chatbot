@@ -62,7 +62,15 @@ LOCATION=us-central1
 
  # Run the app
 python app.py
-<img![image](https://github.com/user-attachments/assets/f37be401-40ce-4ff3-a2bd-f80131cfcc2f)
+
+[image](https://github.com/user-attachments/assets/f37be401-40ce-4ff3-a2bd-f80131cfcc2f)
+![PHOTO-2025-04-11-09-10-22](https://github.com/user-attachments/assets/03077628-6c14-4aad-a28e-7aaf076ef253)
+![image](https://github.com/user-attachments/assets/798efee0-c399-4d24-850d-93e1ecd62320)
+![image](https://github.com/user-attachments/assets/b91f3667-d3c6-4075-ae86-24b6b5ed9e9a)
+![image](https://github.com/user-attachments/assets/4991bc4c-c4f5-441d-a332-4b7866b68068)
+
+
+
 
 
 Future Enhancements
