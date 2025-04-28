@@ -62,6 +62,8 @@ LOCATION=us-central1
 
  # Run the app
 python app.py
+<img![image](https://github.com/user-attachments/assets/f37be401-40ce-4ff3-a2bd-f80131cfcc2f)
+
 
 Future Enhancements
 🔍 Semantic search using vector embeddings (FAISS)
